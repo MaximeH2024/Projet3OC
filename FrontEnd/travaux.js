@@ -1,74 +1,72 @@
-const loginUrl = "http://localhost:5678/api/users/login";
-const loginPayload = {
-    username: "sophie.bluel@test.tld",
-    password: "S0phie"
-};
+import "./auth.js"
 
-
-const reponse = await fetch("http://localhost:5678/api/works");
-const travaux = await reponse.json();
-
-console.log(travaux); 
-
-
-function genererTravaux(travaux) {
-
-    for (let i = 0; i < travaux.length; i++){
-        const cartes = travaux[i]
-
-        const sectionGallery = document.querySelector(".gallery");
-        // Création de balise dédiée
-        const figureElement = document.createElement("figure");
-        // Création des balises 
-        const imageElement = document.createElement("img");
-        imageElement.src = cartes.imageUrl;
-        imageElement.alt = cartes.title;
-        const titleElement = document.createElement("figcaption");
-        titleElement.textContent = cartes.title;
-        
-        // rattachement a la balise gallery
-        sectionGallery.appendChild(figureElement);
-        figureElement.appendChild(imageElement);
-        figureElement.appendChild(titleElement);
-    }
-}
-
-genererTravaux(travaux);
-
-// Création du menu contenant les fiddérentes catégories
 
 const reponsecategories = await fetch("http://localhost:5678/api/categories");
-const categories = await reponsecategories.json();
+const worksCat = await reponsecategories.json();
 
-console.log (categories);
+function genererMenu(worksCat){
+    const navTous = {
+        id: 0,
+        name: "Tous"
+    }
+    const filterAll = [navTous];
 
-function genererMenuCategorie(categories){
-
-    
-        const sectionMenu = document.querySelector("#portfolio");
-        const menuCategorie = document.createElement("form");
-        const selectMenu = document.createElement("select");
-        selectMenu.id = "choixmenu";
-        selectMenu.name = "categories";
-        selectMenu.size = categories.length;
-        selectMenu.multiple = true;
-        const labelMenu = document.createElement("label");
-        labelMenu.htmlFor = selectMenu.id
-        labelMenu.innerText = "Choisissez vos options :"
-        for (let i = 0; i < categories.length; i++) {
-        const optionMenu = document.createElement("option");
-        optionMenu.value = categories[i].name;
-        optionMenu.innerText = categories[i].name;
-        selectMenu.appendChild(optionMenu);
+    for (let key in worksCat){
+        if (worksCat.hasOwnProperty(key)) {
+            filterAll.push(worksCat[key]);
         }
-
-        //rattachement
-        sectionMenu.appendChild(menuCategorie);
-        menuCategorie.appendChild(labelMenu);
-        menuCategorie.appendChild(selectMenu);
-        
+    }
     
+    const menuFilter = filterAll;
+
+    const sectionFilter = document.querySelector(".categories");
+    for (let i = 0; i < menuFilter.length; i++){
+        const filterElement = document.createElement("div");
+        filterElement.className = "filter";
+        filterElement.innerText = menuFilter[i].name;
+        //a approfondir 
+        filterElement.dataset.categoryID = menuFilter[i].id;
+        sectionFilter.appendChild(filterElement);
+
+        filterElement.addEventListener('click', function(){
+            genererPages(works, this.dataset.categoryID);
+        })
+    }
+            
 }
 
-genererMenuCategorie(categories);
+genererMenu(worksCat);
+
+const reponse = await fetch("http://localhost:5678/api/works");
+const works = await reponse.json();
+
+
+function genererPages(works, categoryId) {
+    const sectionGallery = document.querySelector(".gallery");
+    sectionGallery.innerHTML = '';
+
+    for (let i = 0; i < works.length; i++) {
+        const cartes = works[i];
+
+        // Filtrer par catégorie
+        if (categoryId == 0 || cartes.categoryId == categoryId) {
+            const figureElement = document.createElement("figure");
+
+            const imageElement = document.createElement("img");
+            imageElement.src = cartes.imageUrl;
+            imageElement.alt = cartes.title;
+            const titleElement = document.createElement("figcaption");
+            titleElement.textContent = cartes.title;
+
+            sectionGallery.appendChild(figureElement);
+            figureElement.appendChild(imageElement);
+            figureElement.appendChild(titleElement);
+        }
+    }
+}
+genererPages(works,0);
+
+
+
+
 

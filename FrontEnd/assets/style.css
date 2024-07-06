@@ -186,3 +186,30 @@ footer nav ul {
 	margin: 2em
 }
 
+/* Modification du css par Houguet Maxime */
+
+.categories {
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+	gap: 35px;
+	margin-bottom: 20px;
+}
+
+.filter {
+	border: 1px solid #1D6154;
+	border-radius: 60px;
+	color:#1D6154;
+	font-family: 'Syne';
+	font-size: 16px;
+	font-weight: 700;
+	line-height: 19.2px;
+	text-align: center;
+	padding: 10px;
+}
+
+.filter:hover{
+	cursor: pointer;
+	color: white;
+	background-color: #1D6154;
+}
