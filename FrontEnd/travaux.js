@@ -1,4 +1,5 @@
-import "./auth.js"
+import { authentication } from "./auth.js"
+import { homePage } from "./auth.js";
 
 
 const reponsecategories = await fetch("http://localhost:5678/api/categories");
@@ -65,8 +66,8 @@ function genererPages(works, categoryId) {
     }
 }
 genererPages(works,0);
-
-
+authentication();
+homePage();
 
 
 
