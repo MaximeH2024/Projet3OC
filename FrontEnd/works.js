@@ -1,11 +1,8 @@
-import { authentication } from "./auth.js"
-import { homePage } from "./auth.js";
-
 
 const reponsecategories = await fetch("http://localhost:5678/api/categories");
 const worksCat = await reponsecategories.json();
 
-function genererMenu(worksCat){
+function generateWork(worksCat){
     const navTous = {
         id: 0,
         name: "Tous"
@@ -36,7 +33,7 @@ function genererMenu(worksCat){
             
 }
 
-genererMenu(worksCat);
+generateWork(worksCat);
 
 const reponse = await fetch("http://localhost:5678/api/works");
 const works = await reponse.json();
@@ -66,8 +63,8 @@ function genererPages(works, categoryId) {
     }
 }
 genererPages(works,0);
-authentication();
-homePage();
+
+
 
 
 
