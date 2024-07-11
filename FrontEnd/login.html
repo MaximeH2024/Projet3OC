@@ -10,6 +10,7 @@
 	<meta name="description" content="">
 	<link rel="stylesheet" href="./assets/style.css">
 	<script type="module" src="auth.js"></script>
+	<script type="module" src="test.js"></script>
 </head>
 <body>
 <header>
@@ -25,6 +26,13 @@
 </header>
 <main>
 	<div class="login">
+		<aside id="modal-error" class="modal" aria-hidden="true" role="dialog" aria-labelledby="title-modal" style="display: none;">
+			<div class="modal-wrapper">
+				<h4 id="title-modal">Erreur de Connexion : </h4>
+				<p id="error-msg">	</p>
+
+			</div>
+		</aside>
         <h3>Log in</h3>
         <form action="#" method="post" class="login-form" id="login-form">
 			<div class="input-area">

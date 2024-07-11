@@ -234,6 +234,7 @@ footer nav ul {
 	font-weight: 700;
 	line-height: 36px;
 	text-align: center;
+	margin-bottom: 30px;
 }
 .input-area {
 	display: flex;
@@ -278,4 +279,27 @@ footer nav ul {
 
 a {
 	text-decoration: none;
+}
+
+/* Mise en place d'une modal pour afficher les erreurs lors du login */
+
+.modal {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background: rgba(0, 0, 0, 0.8);
+}
+
+.modal-wrapper{
+	width: 400px;
+	overflow: auto;
+	max-width: calc(100vw - 20px);
+	max-height: calc(100vh -20px);
+	padding: 20px;
+	background-color: white;
 }

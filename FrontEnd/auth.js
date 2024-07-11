@@ -1,3 +1,5 @@
+import { errorDisplay } from "./test.js";
+
 const userInfo = document.getElementById("login-form");
 userInfo.addEventListener("submit", function(event){
     event.preventDefault();
@@ -15,7 +17,6 @@ async function logInCheck(logInInfo) {
     try {
         const userAnswer = await fetch("http://localhost:5678/api/users/login", {
             method: "POST",
-            // comprendre cette partie.
             headers: {
                 "Content-Type": "application/json",
             },
@@ -23,13 +24,14 @@ async function logInCheck(logInInfo) {
         });
 
         if (!userAnswer.ok) {
-            throw new Error("Erreur lors de la connexion à l'API");
+            errorDisplay(userAnswer);
         }
-
+        else {
         const user = await userAnswer.json();
         console.log(user);
         window.localStorage.setItem("Token", user.token);
         window.location.href = "index.html";
+        }
     } catch (error) {
         console.error("Erreur :", error);
     }
