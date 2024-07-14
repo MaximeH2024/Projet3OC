@@ -1,5 +1,3 @@
-import { errorDisplay } from "./test.js";
-
 const userInfo = document.getElementById("login-form");
 userInfo.addEventListener("submit", function(event){
     event.preventDefault();
@@ -34,5 +32,38 @@ async function logInCheck(logInInfo) {
         }
     } catch (error) {
         console.error("Erreur :", error);
+    }
+}
+
+function errorDisplay(userAnswer){
+    let errorMessage = "";
+    console.log(userAnswer.status);
+    switch (userAnswer.status) {
+        case 401:    
+            errorMessage = "Erreur dans l’identifiant ou le mot de passe"
+        break;
+        case 404:
+          errorMessage = "Compte Inexistant";
+        break;
+        default:
+          errorMessage = "Erreur inconnue";
+      }
+
+    const modalActivation = document.querySelector("#modal-error");
+    let errorTxt = document.getElementById("error-msg");
+    errorTxt.innerText = errorMessage;
+    modalActivation.style.display = 'flex';
+
+    const closeModalBtn = document.querySelector(".close-modal i");
+    closeModalBtn.addEventListener('click', closeModal);
+    
+    window.addEventListener('click', function(event) {
+        if (event.target === modalActivation) {
+            closeModal();
+        }
+    });
+
+    function closeModal() {
+        modalActivation.style.display = 'none';
     }
 }
