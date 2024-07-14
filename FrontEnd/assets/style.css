@@ -297,16 +297,17 @@ a {
 	background: rgba(0, 0, 0, 0.8);
 }
 
-.modal-wrapper{
+.modal-wrapper-login {
 	width: 400px;
 	overflow: auto;
 	max-width: calc(100vw - 20px);
 	max-height: calc(100vh -20px);
 	padding: 20px;
 	background-color: white;
+	border-radius: 10px;
 }
 
-.modal-wrapper h4, p {
+.modal-wrapper-login h4, p {
 	display: flex;
 	justify-content: center;
 	padding: 15px;
@@ -360,4 +361,36 @@ a {
 	align-items: center;
 	cursor: pointer;
 	gap: 5px;
+}
+
+.modal-wrapper {
+	
+	width: 630px;
+	height: 688px;
+	overflow: auto;
+	max-width: calc(100vw - 20px);
+	max-height: calc(100vh -20px);
+	padding: 20px;
+	background-color: white;
+	border-radius: 10px;
+}
+
+.modal-wrapper h4, p {
+	display: flex;
+	justify-content: center;
+	padding: 15px;
+}
+
+.gallery-modal{
+	display: grid;
+	grid-template-columns: repeat(5, 1fr);
+	grid-column-gap: 20px;
+	grid-row-gap: 20px;
+
+}
+
+.gallery-modal img{
+	object-fit: cover;
+	width: 80px;
+	height: 80px;
 }

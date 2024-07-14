@@ -42,11 +42,18 @@
 	</section>
 	<section id="portfolio">
 		<div class="project">
-		<h2>Mes Projets</h2>
-		<div class="modif-btn" id="btn-modif" style="display: none;">
-			<i class="fa-regular fa-pen-to-square black-icone" id="iconeModifier" aria-hidden="true"></i>
-			modifier
-		</div>
+			<h2>Mes Projets</h2>
+			<div class="modif-btn" id="btn-modif" style="display: none;">
+				<i class="fa-regular fa-pen-to-square black-icone" id="iconeModifier" aria-hidden="true"></i>
+				modifier
+			</div>
+			<aside id="modal-admin" class="modal" aria-hidden="true" role="dialog" aria-labelledby="title-modal" style="display: none;">
+				<div class="modal-wrapper">
+					<div class="close-modal"><i class="fa-solid fa-xmark"></i></div>
+					<h4 id="title-modal"> Galerie Photo : </h4>
+					<div class="gallery-modal"></div>
+				</div>
+			</aside>
 		</div>
 		<div class="categories" id="categories-id">
 

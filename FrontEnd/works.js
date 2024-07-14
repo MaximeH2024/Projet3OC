@@ -1,7 +1,7 @@
 const reponsecategories = await fetch("http://localhost:5678/api/categories");
 const worksCat = await reponsecategories.json();
 
-function generateWork(worksCat){
+export function generateWork(worksCat){
     const navAll = {
         id: 0,
         name: "Tous"
@@ -35,7 +35,7 @@ generateWork(worksCat);
 const reponse = await fetch("http://localhost:5678/api/works");
 const works = await reponse.json();
 
-function genererPages(works, categoryId) {
+export function genererPages(works, categoryId) {
     const sectionGallery = document.querySelector(".gallery");
     sectionGallery.innerHTML = '';
 
@@ -54,6 +54,33 @@ function genererPages(works, categoryId) {
             sectionGallery.appendChild(figureElement);
         }
     });
+}
+
+export function genererPagesModale(works) {
+    const sectionGallery = document.querySelector(".gallery-modal");
+    
+    if (!sectionGallery) {
+        console.error("Element .gallery-modal not found in the DOM");
+        return;
+    }
+
+    sectionGallery.innerHTML = '';
+
+    works.forEach(cartes => {
+        const figureElement = document.createElement("figure");
+
+        const imageElement = document.createElement("img");
+        imageElement.src = cartes.imageUrl;
+        imageElement.alt = cartes.title;
+        
+        figureElement.appendChild(imageElement);
+        sectionGallery.appendChild(figureElement);
+    });
+    const modalSelection = document.querySelector(".modal-wrapper");
+    const addBtn = document.createElement("div");
+    modalSelection.appendChild(addBtn);
+    addBtn.className = "add-picture-btn"
+    addBtn.innerText = "Ajouter une photo"
 }
 
 genererPages(works, 0);
