@@ -364,7 +364,8 @@ a {
 }
 
 .modal-wrapper {
-	
+	display: flex;
+	flex-direction: column;
 	width: 630px;
 	height: 688px;
 	overflow: auto;
@@ -373,24 +374,74 @@ a {
 	padding: 20px;
 	background-color: white;
 	border-radius: 10px;
+	gap: 20px;
 }
 
-.modal-wrapper h4, p {
+.modal-wrapper h4 {
 	display: flex;
 	justify-content: center;
 	padding: 15px;
+	font-family: Work Sans;
+	font-size: 26px;
+	font-weight: 400;
+	line-height: 30.5px;
+	text-align: center;
+
 }
 
 .gallery-modal{
+	position: relative;
 	display: grid;
 	grid-template-columns: repeat(5, 1fr);
-	grid-column-gap: 20px;
 	grid-row-gap: 20px;
-
 }
 
 .gallery-modal img{
+	position: relative;
+	z-index: 2;
 	object-fit: cover;
 	width: 80px;
 	height: 80px;
 }
+
+.gallery-modal figure {
+	position: relative;
+  	z-index: 1;
+	display: flex;
+	justify-content: center;
+}
+
+.gallery-modal i {
+	position: absolute;
+	z-index: 3;
+	right: 25px;
+	cursor: pointer;
+}
+
+/* Mise en place du bouton ajouter une photo */
+
+.add-picture-btn {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	width: 420px;
+	border-top: 1px solid #B3B3B3;
+	margin: 20px auto 0;
+}
+
+.add-picture-btn p {
+	max-width: 240px;
+	border: 1px solid #1D6154;
+	border-radius: 60px;
+	background-color:#1D6154;
+	color: white;
+	font-family: 'Syne';
+	font-size: 16px;
+	font-weight: 700;
+	line-height: 19.2px;
+	text-align: center;
+	padding: 15px;
+	cursor: pointer;
+	margin: 20px auto 0;
+}
+

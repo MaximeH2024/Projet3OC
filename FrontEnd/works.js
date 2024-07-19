@@ -1,7 +1,7 @@
 const reponsecategories = await fetch("http://localhost:5678/api/categories");
 const worksCat = await reponsecategories.json();
 
-export function generateWork(worksCat){
+export function worksFilter(worksCat){
     const navAll = {
         id: 0,
         name: "Tous"
@@ -11,8 +11,6 @@ export function generateWork(worksCat){
     worksCat.forEach(category => {
         filterSet.add(category);
     });
-
-    console.log(filterSet);
     
     const menuFilter = Array.from(filterSet);
 
@@ -25,17 +23,17 @@ export function generateWork(worksCat){
         sectionFilter.appendChild(filterElement);
 
         filterElement.addEventListener('click', function(){
-            genererPages(works, parseInt(this.dataset.categoryID));
+            pageCreation(works, parseInt(this.dataset.categoryID));
         });
     });
 }
 
-generateWork(worksCat);
+worksFilter(worksCat);
 
 const reponse = await fetch("http://localhost:5678/api/works");
 const works = await reponse.json();
 
-export function genererPages(works, categoryId) {
+export function pageCreation(works, categoryId) {
     const sectionGallery = document.querySelector(".gallery");
     sectionGallery.innerHTML = '';
 
@@ -56,31 +54,55 @@ export function genererPages(works, categoryId) {
     });
 }
 
-export function genererPagesModale(works) {
+export function genPagesModal(works) {
     const sectionGallery = document.querySelector(".gallery-modal");
     
-    if (!sectionGallery) {
-        console.error("Element .gallery-modal not found in the DOM");
-        return;
-    }
-
     sectionGallery.innerHTML = '';
 
     works.forEach(cartes => {
         const figureElement = document.createElement("figure");
 
         const imageElement = document.createElement("img");
+
+        const logoElement = document.createElement("i")
         imageElement.src = cartes.imageUrl;
         imageElement.alt = cartes.title;
+        logoElement.className = "fa-solid fa-trash";
+        logoElement.ariaHidden = false;
         
         figureElement.appendChild(imageElement);
         sectionGallery.appendChild(figureElement);
+        figureElement.appendChild(logoElement);
     });
-    const modalSelection = document.querySelector(".modal-wrapper");
-    const addBtn = document.createElement("div");
-    modalSelection.appendChild(addBtn);
-    addBtn.className = "add-picture-btn"
-    addBtn.innerText = "Ajouter une photo"
+
+    
 }
 
-genererPages(works, 0);
+// suppression de l'item "Token" du localStorage lors de la fermeture du page
+
+export async function cleanStorage() {
+    return new Promise((resolve) => {
+        const tokenValidation = window.localStorage.getItem("Token");
+
+        window.addEventListener('beforeunload', function() {
+            // Marquez un indicateur dans le sessionStorage
+            sessionStorage.setItem('isRefreshing', 'true');
+        });
+
+        window.addEventListener('load', function() {
+            if (sessionStorage.getItem('isRefreshing')) {
+                // Si l'indicateur existe, c'est un rafraîchissement de la page
+                sessionStorage.removeItem('isRefreshing');
+                console.log('Page was refreshed');
+                resolve();
+            } else {
+                // Si l'indicateur n'existe pas, c'est une nouvelle navigation
+                console.log('New navigation or page opened');
+                localStorage.removeItem('Token');
+                resolve();
+            }
+        });
+    });
+}
+
+pageCreation(works, 0);

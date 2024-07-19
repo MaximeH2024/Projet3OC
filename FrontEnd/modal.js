@@ -1,12 +1,22 @@
 
-import { genererPagesModale } from './works.js';
+import { genPagesModal } from './works.js';
+import { cleanStorage } from './works.js';
 
-async function editDisplay () {
+async function adminCheck(){
+    await cleanStorage();
+    editDisplay();
+}
+
+adminCheck();
+
+function editDisplay() {
     const tokenValidation = window.localStorage.getItem("Token");
 
     const modEdition = document.getElementById("edit-mod");
     const modModif = document.getElementById("btn-modif");
-    
+
+    console.log(tokenValidation);
+
     if (modEdition && tokenValidation && modModif) {
 
         modEdition.style.display = 'flex';
@@ -16,8 +26,18 @@ async function editDisplay () {
 
 }
 
-editDisplay();
-
+function initAddPhotoButton() {
+    const modalSelection = document.querySelector(".modal-wrapper");
+    
+    if (!modalSelection.querySelector(".add-picture-btn")) {
+        const addBtn = document.createElement("div");
+        const addBtnText = document.createElement("p");
+        addBtn.className = "add-picture-btn";
+        addBtnText.innerText = "Ajouter une photo";
+        modalSelection.appendChild(addBtn);
+        addBtn.appendChild(addBtnText);
+    }
+}
 
 async function adminModalDisplay () {
     const tokenValidation = window.localStorage.getItem("Token");
@@ -27,7 +47,7 @@ async function adminModalDisplay () {
     showModal.addEventListener("click", function(event){
         event.preventDefault();
         modalDisplay.style.display = "flex";
-        genererPagesModale(works);
+        genPagesModal(works);
     })
 
     const closeModalBtn = document.querySelector(".close-modal i");
@@ -51,5 +71,8 @@ async function fetchWorks() {
     works = await reponse.json();
 }
 
+
 await fetchWorks();
+
 adminModalDisplay();
+initAddPhotoButton();
