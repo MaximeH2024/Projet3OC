@@ -322,6 +322,11 @@ a {
 	cursor: pointer;
 }
 
+.header-modal {
+	display: flex;
+	justify-content: space-between;
+}
+
 /* Création du mode édition */
 
 .mod-edit {
@@ -445,3 +450,75 @@ a {
 	margin: 20px auto 0;
 }
 
+/* Mise en place de la page modale ajout photo */
+
+.form-container {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    width: 300px;
+}
+
+.image-upload {
+    margin-bottom: 20px;
+}
+
+.image-upload input[type="file"] {
+    display: none;
+}
+
+.upload-placeholder {
+    background-color: #eef2f7;
+    border: 1px dashed #d0d7de;
+    padding: 20px;
+    text-align: center;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.upload-placeholder img {
+    display: block;
+    margin: 0 auto 10px;
+    width: 40px;
+    height: 40px;
+}
+
+.upload-placeholder span {
+    display: block;
+    font-size: 16px;
+    color: #007bff;
+    margin-bottom: 5px;
+}
+
+.upload-placeholder p {
+    margin: 0;
+    font-size: 12px;
+    color: #6c757d;
+}
+
+.form-field {
+    margin-bottom: 15px;
+}
+
+.form-field label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+.form-field input,
+.form-field select {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+}
+
+.header-modal i {
+	cursor: pointer;
+}

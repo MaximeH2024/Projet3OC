@@ -10,8 +10,9 @@
 	<meta name="description" content="">
 	<link rel="stylesheet" href="./assets/style.css">
 	<script src="https://kit.fontawesome.com/9d554c08d1.js" crossorigin="anonymous"></script>
-	<script type="module" src="works.js"></script>
-	<script type="module" src="modal.js"></script>
+	<script src="works.js" type="module"></script>
+	<script src="modal.js" type="module"></script>
+	<script src="modalState.js" type="module"></script>
 </head>
 <body>
 	<div class="mod-edit" id="edit-mod" style="display: none;">
@@ -49,9 +50,7 @@
 			</div>
 			<aside id="modal-admin" class="modal" aria-hidden="true" role="dialog" aria-labelledby="title-modal" style="display: none;">
 				<div class="modal-wrapper">
-					<div class="close-modal"><i class="fa-solid fa-xmark"></i></div>
-					<h4 id="title-modal"> Galerie Photo : </h4>
-					<div class="gallery-modal"></div>
+					
 				</div>
 			</aside>
 		</div>
@@ -85,5 +84,6 @@
 		</ul>
 	</nav>
 </footer>
+
 </body>
 </html>

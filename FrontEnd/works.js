@@ -1,3 +1,6 @@
+
+import { genAddPagesModal } from "./modal.js";
+
 const reponsecategories = await fetch("http://localhost:5678/api/categories");
 const worksCat = await reponsecategories.json();
 
@@ -55,37 +58,83 @@ export function pageCreation(works, categoryId) {
 }
 
 export function genPagesModal(works) {
-    const sectionGallery = document.querySelector(".gallery-modal");
+    const modalDisplay = document.getElementById("modal-admin");
+    const modalWrapper = document.querySelector(".modal-wrapper");
+
+    let closeModal = modalWrapper.querySelector('.close-modal');
+    let title = modalWrapper.querySelector('#title-modal');
+    let addBtn = modalWrapper.querySelector('.add-picture-btn');
+    let sectionGallery = modalWrapper.querySelector(".gallery-modal");
+
+    if (!closeModal && !title && !addBtn) {
+        closeModal = document.createElement('div');
+        closeModal.classList.add('close-modal');
+        const closeIcon = document.createElement('i');
+        closeIcon.classList.add('fa-solid', 'fa-xmark');
+        closeModal.appendChild(closeIcon);
+        modalWrapper.appendChild(closeModal);
+
+        closeModal.addEventListener('click', function() {
+            modalDisplay.style.display = 'none';
+        });
     
-    sectionGallery.innerHTML = '';
+        title = document.createElement('h4');
+        title.id = 'title-modal';
+        title.innerText = 'Galerie Photo :';
+        modalWrapper.appendChild(title);
+    
+        addBtn = document.createElement("div");
+        const addBtnText = document.createElement("p");
+        addBtn.className = "add-picture-btn";
+        addBtnText.innerText = "Ajouter une photo";
+        addBtn.appendChild(addBtnText);
+        modalWrapper.appendChild(addBtn);
+
+        addBtn.addEventListener("click", function(e){
+            e.preventDefault();
+            modalWrapper.innerHTML = "";
+            genAddPagesModal();
+        });
+    }
+
+    if (!sectionGallery) {
+        sectionGallery = document.createElement('div');
+        sectionGallery.classList.add('gallery-modal');
+        modalWrapper.insertBefore(sectionGallery, addBtn);
+    } else {
+        sectionGallery.innerHTML = '';
+    }
 
     works.forEach(cartes => {
         const figureElement = document.createElement("figure");
 
         const imageElement = document.createElement("img");
-
-        const logoElement = document.createElement("i")
+        const logoElement = document.createElement("i");
         imageElement.src = cartes.imageUrl;
         imageElement.alt = cartes.title;
         logoElement.className = "fa-solid fa-trash";
         logoElement.ariaHidden = false;
-        
+
         figureElement.appendChild(imageElement);
         sectionGallery.appendChild(figureElement);
         figureElement.appendChild(logoElement);
     });
-
-    
 }
 
-// suppression de l'item "Token" du localStorage lors de la fermeture du page
+export function closeModal() {
+    const modalDisplay = document.getElementById("modal-admin");
+    
+    if (modalDisplay) {
+        console.log("je ferme ma modale")
+        modalDisplay.style.display = 'none';
+    }
+}
 
 export async function cleanStorage() {
     return new Promise((resolve) => {
-        const tokenValidation = window.localStorage.getItem("Token");
-
+        
         window.addEventListener('beforeunload', function() {
-            // Marquez un indicateur dans le sessionStorage
+            // Marque un indicateur dans le sessionStorage
             sessionStorage.setItem('isRefreshing', 'true');
         });
 
