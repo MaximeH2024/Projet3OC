@@ -522,3 +522,7 @@ a {
 .header-modal i {
 	cursor: pointer;
 }
+
+.submit-button {
+	cursor: pointer;
+}

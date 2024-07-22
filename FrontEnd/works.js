@@ -1,4 +1,3 @@
-
 import { genAddPagesModal } from "./modal.js";
 
 const reponsecategories = await fetch("http://localhost:5678/api/categories");
@@ -34,7 +33,7 @@ export function worksFilter(worksCat){
 worksFilter(worksCat);
 
 const reponse = await fetch("http://localhost:5678/api/works");
-const works = await reponse.json();
+let works = await reponse.json();
 
 export function pageCreation(works, categoryId) {
     const sectionGallery = document.querySelector(".gallery");
@@ -43,6 +42,7 @@ export function pageCreation(works, categoryId) {
     works.forEach(cartes => {
         if (categoryId === 0 || cartes.categoryId === categoryId) {
             const figureElement = document.createElement("figure");
+            figureElement.dataset.id = cartes.id;  // Ajouter l'ID de l'image
 
             const imageElement = document.createElement("img");
             imageElement.src = cartes.imageUrl;
@@ -107,6 +107,7 @@ export function genPagesModal(works) {
 
     works.forEach(cartes => {
         const figureElement = document.createElement("figure");
+        figureElement.dataset.id = cartes.id;  // Ajouter l'ID de l'image
 
         const imageElement = document.createElement("img");
         const logoElement = document.createElement("i");
@@ -119,6 +120,8 @@ export function genPagesModal(works) {
         sectionGallery.appendChild(figureElement);
         figureElement.appendChild(logoElement);
     });
+
+    deleteWorks();  // Appeler deleteWorks après avoir généré les éléments
 }
 
 export function closeModal() {
@@ -154,4 +157,58 @@ export async function cleanStorage() {
     });
 }
 
+async function deleteWork(id) {
+    const token = localStorage.getItem('Token');  // Récupérer le token du localStorage
+    if (!token) {
+        console.error('No token found in localStorage');
+        return;
+    }
+
+    const response = await fetch(`http://localhost:5678/api/works/${id}`, {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`  // Ajouter le token dans les en-têtes
+        }
+    });
+
+    if (response.ok) {
+        console.log(`Work with ID ${id} deleted`);
+        works = works.filter(work => work.id !== id);  // Mettre à jour les données de works
+        removeWorkFromGallery(id);  // Supprimer l'élément de la galerie principale
+    } else {
+        console.error(`Failed to delete work with ID ${id}`);
+    }
+}
+
+function removeWorkFromGallery(id) {
+    // Sélectionner et supprimer l'élément <figure> dans la galerie principale
+    const figureElement = document.querySelector(`.gallery figure[data-id='${id}']`);
+    if (figureElement) {
+        figureElement.remove();
+    }
+}
+
+function deleteWorks() {
+    // Sélectionner tous les éléments <i> dans la classe gallery-modal
+    const trashIcons = document.querySelectorAll('.gallery-modal figure i.fa-trash');
+    console.log(trashIcons);
+
+    // Ajouter un event listener à chaque icône de poubelle
+    trashIcons.forEach(function(icon) {
+        icon.addEventListener('click', async function(event) {
+            // Action à effectuer lors du clic sur l'icône
+            console.log('Icon clicked!', event.target);
+            // Par exemple, supprimer le parent <figure>
+            const figure = event.target.closest('figure');
+            if (figure) {
+                const id = figure.dataset.id;  // Récupérer l'ID de l'image
+                await deleteWork(id);  // Appeler la fonction de suppression de l'API
+                figure.remove();  // Supprimer l'élément de la modale
+            }
+        });
+    });
+}
+
 pageCreation(works, 0);
+genPagesModal(works);

@@ -54,13 +54,10 @@ export function genAddPagesModal() {
     const modalDisplay = document.getElementById("modal-admin");
     const wrapperSelection = document.querySelector(".modal-wrapper");
 
-    // Creating the header
     const headerModal = document.createElement("div");
     headerModal.className = "header-modal";
-
     const goBackModal = document.createElement("i");
     goBackModal.className = "fa-solid fa-arrow-left";
-
     const closeModal = document.createElement("i");
     closeModal.className = "fa-solid fa-xmark";
 
@@ -150,7 +147,7 @@ export function genAddPagesModal() {
     formContainer.appendChild(categoryField);
 
     // Creating the submit button
-    const submitButton = document.createElement("button");
+    const submitButton = document.createElement("div");
     submitButton.className = "submit-button";
     submitButton.innerText = "Valider";
 
