@@ -49,7 +49,7 @@ function errorDisplay(userAnswer){
           errorMessage = "Erreur inconnue";
       }
 
-    const modalActivation = document.querySelector("#modal-error");
+    const modalActivation = document.querySelector("#error");
     let errorTxt = document.getElementById("error-msg");
     errorTxt.innerText = errorMessage;
     modalActivation.style.display = 'flex';

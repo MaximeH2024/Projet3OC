@@ -1,5 +1,7 @@
 import { genPagesModal } from './works.js';
 import { cleanStorage, closeModal } from './works.js';
+import { worksCat } from './works.js';
+import { sendWork } from './works.js';
 import { openModal } from './modalState.js';
 
 async function adminCheck() {
@@ -96,6 +98,13 @@ export function genAddPagesModal() {
     fileInput.accept = ".jpg, .jpeg, .png";
     fileInput.style.display = "none"; // Hide the actual file input
 
+    // Create image preview element
+    const imagePreview = document.createElement("img");
+    imagePreview.className = "image-preview";
+    imagePreview.style.display = "none"; // Initially hidden
+    imagePreview.style.maxWidth = "100%";
+    imagePreview.style.maxHeight = "100%";
+
     // Appending elements to imageUpload section
     uploadPlaceholder.appendChild(placeholderIcon);
     uploadPlaceholder.appendChild(addPhotoText);
@@ -104,6 +113,7 @@ export function genAddPagesModal() {
     fileInputLabel.appendChild(uploadPlaceholder);
     imageUpload.appendChild(fileInputLabel);
     imageUpload.appendChild(fileInput);
+    imageUpload.appendChild(imagePreview); // Add preview image to the upload section
 
     // Creating the title field
     const titleField = document.createElement("div");
@@ -137,6 +147,14 @@ export function genAddPagesModal() {
     defaultOption.innerText = "Sélectionner une catégorie";
     categorySelect.appendChild(defaultOption);
 
+    // Populate the category select with options from worksCat
+    worksCat.forEach(category => {
+        const option = document.createElement("option");
+        option.value = category.id;
+        option.innerText = category.name;
+        categorySelect.appendChild(option);
+    });
+
     // Appending elements to category field
     categoryField.appendChild(categoryLabel);
     categoryField.appendChild(categorySelect);
@@ -165,4 +183,33 @@ export function genAddPagesModal() {
         wrapperSelection.innerHTML = "";
         genPagesModal(works);
     });
+
+    // Add event listener to file input to handle image preview
+    fileInput.addEventListener('change', function(event) {
+        const file = event.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                imagePreview.src = e.target.result;
+                imagePreview.style.display = "block"; // Show the image preview
+            }
+            reader.readAsDataURL(file);
+        }
+    });
+
+    // Add event listener to submit button
+    submitButton.addEventListener('click', async function(event) {
+        event.preventDefault(); // Empêcher le comportement par défaut du bouton
+    
+        const title = titleInput.value;
+        const categoryId = categorySelect.value;
+        const file = fileInput.files[0];
+    
+        if (title && categoryId && file) {
+            await sendWork(title, categoryId, file);
+        } else {
+            alert('Please fill all fields');
+        }
+    });
 }
+

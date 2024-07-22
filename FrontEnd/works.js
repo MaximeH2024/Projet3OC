@@ -3,6 +3,8 @@ import { genAddPagesModal } from "./modal.js";
 const reponsecategories = await fetch("http://localhost:5678/api/categories");
 const worksCat = await reponsecategories.json();
 
+export { worksCat };
+
 export function worksFilter(worksCat){
     const navAll = {
         id: 0,
@@ -209,6 +211,58 @@ function deleteWorks() {
         });
     });
 }
+
+export async function sendWork(title, categoryId, file) {
+    const formData = new FormData();
+    formData.append('title', title);
+    formData.append('categoryId', categoryId);
+    formData.append('image', file);
+
+    const token = localStorage.getItem('Token'); // Assurez-vous d'avoir le token
+
+    try {
+        const response = await fetch('http://localhost:5678/api/works', {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${token}` // Ajouter le token dans les en-têtes
+            },
+            body: formData
+        });
+
+        if (response.ok) {
+            const newWork = await response.json();
+            console.log('New work added:', newWork);
+            works.push(newWork); // Ajouter le nouveau travail à la galerie
+            updateWorksGallery(newWork); // Mettre à jour l'interface utilisateur
+            removeAndCloseModal(); // Fermer la modal et supprimer son contenu
+        } else {
+            const errorData = await response.json();
+            console.error('Failed to add work:', errorData.message);
+        }
+    } catch (error) {
+        console.error('Error:', error);
+    }
+}
+
+function updateWorksGallery(newWork) {
+    // Logique pour mettre à jour l'interface utilisateur avec le nouveau travail ajouté
+    const gallery = document.getElementById('works-gallery');
+    const workElement = document.createElement('div');
+    workElement.className = 'work-item';
+    workElement.innerHTML = `
+        <img src="${newWork.imageUrl}" alt="${newWork.title}">
+        <p>${newWork.title}</p>
+    `;
+    gallery.appendChild(workElement);
+}
+
+function removeAndCloseModal() {
+    const modalDisplay = document.getElementById("modal-admin");
+    const modalWrapper = document.querySelector(".modal-wrapper");
+    modalWrapper.innerHTML = "";
+    modalDisplay.style.display = 'none';
+}
+
 
 pageCreation(works, 0);
 genPagesModal(works);

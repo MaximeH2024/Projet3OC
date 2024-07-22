@@ -297,22 +297,15 @@ a {
 	background: rgba(0, 0, 0, 0.8);
 }
 
-.modal-wrapper-login {
-	width: 400px;
-	overflow: auto;
-	max-width: calc(100vw - 20px);
-	max-height: calc(100vh -20px);
-	padding: 20px;
-	background-color: white;
-	border-radius: 10px;
-}
-
-.modal-wrapper-login h4, p {
+.aside-error {
 	display: flex;
+	flex-direction: column;
 	justify-content: center;
-	padding: 15px;
+	align-items: center;
+	gap: 15px;
+	padding-bottom: 20px;
+	color: red;
 }
-
 .close-modal {
 	display: flex;
 	flex-direction: row-reverse;
