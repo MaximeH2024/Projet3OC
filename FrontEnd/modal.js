@@ -1,15 +1,11 @@
 import { genPagesModal } from './works.js';
-import { cleanStorage, closeModal } from './works.js';
+import { closeModal } from './works.js';
 import { worksCat } from './works.js';
 import { sendWork } from './works.js';
 import { openModal } from './modalState.js';
 
-async function adminCheck() {
-    await cleanStorage();
-    editDisplay();
-}
 
-adminCheck();
+editDisplay();
 
 let works;
 
@@ -153,6 +149,7 @@ export function genAddPagesModal() {
         option.value = category.id;
         option.innerText = category.name;
         categorySelect.appendChild(option);
+        console.log(`Option added: value=${option.value}, text=${option.innerText}`);
     });
 
     // Appending elements to category field
@@ -199,12 +196,16 @@ export function genAddPagesModal() {
 
     // Add event listener to submit button
     submitButton.addEventListener('click', async function(event) {
-        event.preventDefault(); // Empêcher le comportement par défaut du bouton
-    
+        //event.preventDefault(); // Empêcher le comportement par défaut du bouton
+
         const title = titleInput.value;
-        const categoryId = categorySelect.value;
+        const categoryId = parseInt(categorySelect.value); // Ensure categoryId is an integer
         const file = fileInput.files[0];
-    
+
+        console.log(`Title: ${title}`);
+        console.log(`Category ID: ${categoryId}`);
+        console.log(`File: ${file}`);
+
         if (title && categoryId && file) {
             await sendWork(title, categoryId, file);
         } else {
@@ -212,4 +213,5 @@ export function genAddPagesModal() {
         }
     });
 }
+
 

@@ -5,17 +5,17 @@ const worksCat = await reponsecategories.json();
 
 export { worksCat };
 
-export function worksFilter(worksCat){
+export function worksFilter(worksCat) {
     const navAll = {
         id: 0,
         name: "Tous"
-    }
+    };
     const filterSet = new Set([navAll]);
 
     worksCat.forEach(category => {
         filterSet.add(category);
     });
-    
+
     const menuFilter = Array.from(filterSet);
 
     const sectionFilter = document.querySelector(".categories");
@@ -26,7 +26,7 @@ export function worksFilter(worksCat){
         filterElement.dataset.categoryID = category.id;
         sectionFilter.appendChild(filterElement);
 
-        filterElement.addEventListener('click', function(){
+        filterElement.addEventListener('click', function () {
             pageCreation(works, parseInt(this.dataset.categoryID));
         });
     });
@@ -44,7 +44,7 @@ export function pageCreation(works, categoryId) {
     works.forEach(cartes => {
         if (categoryId === 0 || cartes.categoryId === categoryId) {
             const figureElement = document.createElement("figure");
-            figureElement.dataset.id = cartes.id;  // Ajouter l'ID de l'image
+            figureElement.dataset.id = cartes.id;
 
             const imageElement = document.createElement("img");
             imageElement.src = cartes.imageUrl;
@@ -76,15 +76,15 @@ export function genPagesModal(works) {
         closeModal.appendChild(closeIcon);
         modalWrapper.appendChild(closeModal);
 
-        closeModal.addEventListener('click', function() {
+        closeModal.addEventListener('click', function () {
             modalDisplay.style.display = 'none';
         });
-    
+
         title = document.createElement('h4');
         title.id = 'title-modal';
         title.innerText = 'Galerie Photo :';
         modalWrapper.appendChild(title);
-    
+
         addBtn = document.createElement("div");
         const addBtnText = document.createElement("p");
         addBtn.className = "add-picture-btn";
@@ -92,7 +92,7 @@ export function genPagesModal(works) {
         addBtn.appendChild(addBtnText);
         modalWrapper.appendChild(addBtn);
 
-        addBtn.addEventListener("click", function(e){
+        addBtn.addEventListener("click", function (e) {
             e.preventDefault();
             modalWrapper.innerHTML = "";
             genAddPagesModal();
@@ -109,7 +109,7 @@ export function genPagesModal(works) {
 
     works.forEach(cartes => {
         const figureElement = document.createElement("figure");
-        figureElement.dataset.id = cartes.id;  // Ajouter l'ID de l'image
+        figureElement.dataset.id = cartes.id;
 
         const imageElement = document.createElement("img");
         const logoElement = document.createElement("i");
@@ -123,44 +123,38 @@ export function genPagesModal(works) {
         figureElement.appendChild(logoElement);
     });
 
-    deleteWorks();  // Appeler deleteWorks après avoir généré les éléments
+    deleteWorks();
 }
 
 export function closeModal() {
     const modalDisplay = document.getElementById("modal-admin");
-    
+
     if (modalDisplay) {
         console.log("je ferme ma modale")
         modalDisplay.style.display = 'none';
     }
 }
 
-export async function cleanStorage() {
-    return new Promise((resolve) => {
-        
-        window.addEventListener('beforeunload', function() {
-            // Marque un indicateur dans le sessionStorage
-            sessionStorage.setItem('isRefreshing', 'true');
-        });
+export function toggleLoginLogout() {
+    const loginBtn = document.getElementById('login-btn');
+    const token = localStorage.getItem('Token');
 
-        window.addEventListener('load', function() {
-            if (sessionStorage.getItem('isRefreshing')) {
-                // Si l'indicateur existe, c'est un rafraîchissement de la page
-                sessionStorage.removeItem('isRefreshing');
-                console.log('Page was refreshed');
-                resolve();
-            } else {
-                // Si l'indicateur n'existe pas, c'est une nouvelle navigation
-                console.log('New navigation or page opened');
-                localStorage.removeItem('Token');
-                resolve();
-            }
+    if (token) {
+        loginBtn.innerText = 'logout';
+        loginBtn.href = '#';
+        loginBtn.addEventListener('click', function(event) {
+            event.preventDefault();
+            localStorage.removeItem('Token');
+            location.reload(); // Reload the page to reflect the changes
         });
-    });
+    } else {
+        loginBtn.innerText = 'login';
+        loginBtn.href = 'login.html';
+    }
 }
 
 async function deleteWork(id) {
-    const token = localStorage.getItem('Token');  // Récupérer le token du localStorage
+    const token = localStorage.getItem('Token');
     if (!token) {
         console.error('No token found in localStorage');
         return;
@@ -170,21 +164,20 @@ async function deleteWork(id) {
         method: 'DELETE',
         headers: {
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`  // Ajouter le token dans les en-têtes
+            'Authorization': `Bearer ${token}`
         }
     });
 
     if (response.ok) {
         console.log(`Work with ID ${id} deleted`);
-        works = works.filter(work => work.id !== id);  // Mettre à jour les données de works
-        removeWorkFromGallery(id);  // Supprimer l'élément de la galerie principale
+        works = works.filter(work => work.id !== id);
+        removeWorkFromGallery(id);
     } else {
         console.error(`Failed to delete work with ID ${id}`);
     }
 }
 
 function removeWorkFromGallery(id) {
-    // Sélectionner et supprimer l'élément <figure> dans la galerie principale
     const figureElement = document.querySelector(`.gallery figure[data-id='${id}']`);
     if (figureElement) {
         figureElement.remove();
@@ -192,21 +185,17 @@ function removeWorkFromGallery(id) {
 }
 
 function deleteWorks() {
-    // Sélectionner tous les éléments <i> dans la classe gallery-modal
     const trashIcons = document.querySelectorAll('.gallery-modal figure i.fa-trash');
     console.log(trashIcons);
 
-    // Ajouter un event listener à chaque icône de poubelle
-    trashIcons.forEach(function(icon) {
-        icon.addEventListener('click', async function(event) {
-            // Action à effectuer lors du clic sur l'icône
+    trashIcons.forEach(function (icon) {
+        icon.addEventListener('click', async function (event) {
             console.log('Icon clicked!', event.target);
-            // Par exemple, supprimer le parent <figure>
             const figure = event.target.closest('figure');
             if (figure) {
-                const id = figure.dataset.id;  // Récupérer l'ID de l'image
-                await deleteWork(id);  // Appeler la fonction de suppression de l'API
-                figure.remove();  // Supprimer l'élément de la modale
+                const id = figure.dataset.id;
+                await deleteWork(id);
+                figure.remove();
             }
         });
     });
@@ -215,16 +204,21 @@ function deleteWorks() {
 export async function sendWork(title, categoryId, file) {
     const formData = new FormData();
     formData.append('title', title);
-    formData.append('categoryId', categoryId);
+    formData.append('category', categoryId); 
     formData.append('image', file);
-
-    const token = localStorage.getItem('Token'); // Assurez-vous d'avoir le token
+    
+    const token = localStorage.getItem('Token');
+    console.log('Token:', token);
 
     try {
+        const nextId = await getNextAvailableId();
+        console.log(`Next available ID: ${nextId}`);
+
         const response = await fetch('http://localhost:5678/api/works', {
             method: 'POST',
             headers: {
-                'Authorization': `Bearer ${token}` // Ajouter le token dans les en-têtes
+                accept: "application/json",
+                Authorization: `Bearer ${token}`
             },
             body: formData
         });
@@ -232,9 +226,11 @@ export async function sendWork(title, categoryId, file) {
         if (response.ok) {
             const newWork = await response.json();
             console.log('New work added:', newWork);
-            works.push(newWork); // Ajouter le nouveau travail à la galerie
-            updateWorksGallery(newWork); // Mettre à jour l'interface utilisateur
-            removeAndCloseModal(); // Fermer la modal et supprimer son contenu
+
+            // Update the works array and re-render the gallery
+            works.push(newWork);
+            pageCreation(works, 0);
+            genPagesModal(works);
         } else {
             const errorData = await response.json();
             console.error('Failed to add work:', errorData.message);
@@ -244,25 +240,20 @@ export async function sendWork(title, categoryId, file) {
     }
 }
 
-function updateWorksGallery(newWork) {
-    // Logique pour mettre à jour l'interface utilisateur avec le nouveau travail ajouté
-    const gallery = document.getElementById('works-gallery');
-    const workElement = document.createElement('div');
-    workElement.className = 'work-item';
-    workElement.innerHTML = `
-        <img src="${newWork.imageUrl}" alt="${newWork.title}">
-        <p>${newWork.title}</p>
-    `;
-    gallery.appendChild(workElement);
-}
+async function getNextAvailableId() {
+    const response = await fetch("http://localhost:5678/api/works");
+    const works = await response.json();
+    
+    const ids = works.map(work => work.id);
+    let nextId = 0; // Assuming IDs start from 1
 
-function removeAndCloseModal() {
-    const modalDisplay = document.getElementById("modal-admin");
-    const modalWrapper = document.querySelector(".modal-wrapper");
-    modalWrapper.innerHTML = "";
-    modalDisplay.style.display = 'none';
-}
+    while (ids.includes(nextId)) {
+        nextId++;
+    }
 
+    return nextId;
+}
 
 pageCreation(works, 0);
 genPagesModal(works);
+toggleLoginLogout();
