@@ -115,7 +115,7 @@ export function genPagesModal(works) {
         const logoElement = document.createElement("i");
         imageElement.src = cartes.imageUrl;
         imageElement.alt = cartes.title;
-        logoElement.className = "fa-solid fa-trash";
+        logoElement.className = "fa-solid fa-trash-can";
         logoElement.ariaHidden = false;
 
         figureElement.appendChild(imageElement);
@@ -172,6 +172,7 @@ async function deleteWork(id) {
         console.log(`Work with ID ${id} deleted`);
         works = works.filter(work => work.id !== id);
         removeWorkFromGallery(id);
+        removeWorkFromModalGallery(id);
     } else {
         console.error(`Failed to delete work with ID ${id}`);
     }
@@ -184,8 +185,15 @@ function removeWorkFromGallery(id) {
     }
 }
 
+function removeWorkFromModalGallery(id) {
+    const figureElement = document.querySelector(`.gallery-modal figure[data-id='${id}']`);
+    if (figureElement) {
+        figureElement.remove();
+    }
+}
+
 function deleteWorks() {
-    const trashIcons = document.querySelectorAll('.gallery-modal figure i.fa-trash');
+    const trashIcons = document.querySelectorAll('.gallery-modal figure i.fa-trash-can');
     console.log(trashIcons);
 
     trashIcons.forEach(function (icon) {
@@ -227,10 +235,7 @@ export async function sendWork(title, categoryId, file) {
             const newWork = await response.json();
             console.log('New work added:', newWork);
 
-            // Update the works array and re-render the gallery
             works.push(newWork);
-            pageCreation(works, 0);
-            genPagesModal(works);
         } else {
             const errorData = await response.json();
             console.error('Failed to add work:', errorData.message);
@@ -245,7 +250,7 @@ async function getNextAvailableId() {
     const works = await response.json();
     
     const ids = works.map(work => work.id);
-    let nextId = 0; // Assuming IDs start from 1
+    let nextId = 0;
 
     while (ids.includes(nextId)) {
         nextId++;

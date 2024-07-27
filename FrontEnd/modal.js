@@ -98,18 +98,16 @@ export function genAddPagesModal() {
     const imagePreview = document.createElement("img");
     imagePreview.className = "image-preview";
     imagePreview.style.display = "none"; // Initially hidden
-    imagePreview.style.maxWidth = "100%";
-    imagePreview.style.maxHeight = "100%";
 
     // Appending elements to imageUpload section
     uploadPlaceholder.appendChild(placeholderIcon);
     uploadPlaceholder.appendChild(addPhotoText);
     uploadPlaceholder.appendChild(fileSizeText);
+    uploadPlaceholder.appendChild(imagePreview); // Add preview image to the upload section
 
     fileInputLabel.appendChild(uploadPlaceholder);
     imageUpload.appendChild(fileInputLabel);
     imageUpload.appendChild(fileInput);
-    imageUpload.appendChild(imagePreview); // Add preview image to the upload section
 
     // Creating the title field
     const titleField = document.createElement("div");
@@ -161,8 +159,12 @@ export function genAddPagesModal() {
     formContainer.appendChild(titleField);
     formContainer.appendChild(categoryField);
 
+    // Creating the submit area
+    const submitArea = document.createElement("div");
+    submitArea.className = "submit-area";
+
     // Creating the submit button
-    const submitButton = document.createElement("div");
+    const submitButton = document.createElement("p");
     submitButton.className = "submit-button";
     submitButton.innerText = "Valider";
 
@@ -170,35 +172,50 @@ export function genAddPagesModal() {
     wrapperSelection.appendChild(headerModal);
     wrapperSelection.appendChild(titleModal);
     wrapperSelection.appendChild(formContainer);
-    wrapperSelection.appendChild(submitButton);
+    wrapperSelection.appendChild(submitArea);
+    submitArea.appendChild(submitButton);
 
-    closeModal.addEventListener('click', function() {
+    closeModal.addEventListener('click', function () {
         modalDisplay.style.display = 'none';
     });
 
-    goBackModal.addEventListener('click', function() {
+    goBackModal.addEventListener('click', function () {
         wrapperSelection.innerHTML = "";
         genPagesModal(works);
     });
 
-    // Add event listener to file input to handle image preview
-    fileInput.addEventListener('change', function(event) {
+    // Function to check form validity
+    function checkFormValidity() {
+        const title = titleInput.value.trim();
+        const categoryId = categorySelect.value;
+        const file = fileInput.files[0];
+
+        if (title && categoryId && file) {
+            submitButton.classList.add('active');
+        } else {
+            submitButton.classList.remove('active');
+        }
+    }
+
+    // Add event listeners to inputs
+    titleInput.addEventListener('input', checkFormValidity);
+    categorySelect.addEventListener('change', checkFormValidity);
+    fileInput.addEventListener('change', function (event) {
+        checkFormValidity();
         const file = event.target.files[0];
         if (file) {
             const reader = new FileReader();
-            reader.onload = function(e) {
+            reader.onload = function (e) {
                 imagePreview.src = e.target.result;
-                imagePreview.style.display = "block"; // Show the image preview
+                uploadPlaceholder.classList.add('uploaded');
             }
             reader.readAsDataURL(file);
         }
     });
 
     // Add event listener to submit button
-    submitButton.addEventListener('click', async function(event) {
-        //event.preventDefault(); // Empêcher le comportement par défaut du bouton
-
-        const title = titleInput.value;
+    submitButton.addEventListener('click', async function (event) {
+        const title = titleInput.value.trim();
         const categoryId = parseInt(categorySelect.value); // Ensure categoryId is an integer
         const file = fileInput.files[0];
 
@@ -213,5 +230,4 @@ export function genAddPagesModal() {
         }
     });
 }
-
 
