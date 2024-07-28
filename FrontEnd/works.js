@@ -147,6 +147,7 @@ export function toggleLoginLogout() {
         loginBtn.addEventListener('click', function(event) {
             event.preventDefault();
             localStorage.removeItem('Token');
+            window.location.href = 'index.html'; // Redirect to index.html
         });
     } else {
         loginBtn.innerText = 'login';
@@ -174,6 +175,12 @@ async function deleteWork(id) {
         works = works.filter(work => work.id !== id);
         removeWorkFromGallery(id);
         removeWorkFromModalGallery(id);
+        
+        // Update the modal gallery
+        genPagesModal(works);
+
+        // Close the modal
+        closeModal();
     } else {
         console.error(`Failed to delete work with ID ${id}`);
     }
@@ -202,8 +209,7 @@ function deleteWorks() {
             if (figure) {
                 const id = figure.dataset.id;
                 await deleteWork(id);
-                // The figure will be removed by removeWorkFromModalGallery after successful deletion
-            }
+                }
         });
     });
 }
@@ -215,12 +221,7 @@ export async function sendWork(title, categoryId, file) {
     formData.append('image', file);
     
     const token = localStorage.getItem('Token');
-    console.log('Token:', token);
-
     try {
-        const nextId = await getNextAvailableId();
-        console.log(`Next available ID: ${nextId}`);
-
         const response = await fetch('http://localhost:5678/api/works', {
             method: 'POST',
             headers: {
@@ -234,7 +235,15 @@ export async function sendWork(title, categoryId, file) {
             const newWork = await response.json();
             console.log('New work added:', newWork);
 
+            // Update the works array and the page
             works.push(newWork);
+            pageCreation(works, 0);
+
+            // Update the modal gallery
+            genPagesModal(works);
+            
+            // Close the modal
+            closeModal();
         } else {
             const errorData = await response.json();
             console.error('Failed to add work:', errorData.message);
@@ -242,20 +251,6 @@ export async function sendWork(title, categoryId, file) {
     } catch (error) {
         console.error('Error:', error);
     }
-}
-
-async function getNextAvailableId() {
-    const response = await fetch("http://localhost:5678/api/works");
-    const works = await response.json();
-    
-    const ids = works.map(work => work.id);
-    let nextId = 0;
-
-    while (ids.includes(nextId)) {
-        nextId++;
-    }
-
-    return nextId;
 }
 
 pageCreation(works, 0);

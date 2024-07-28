@@ -22,7 +22,6 @@ function editDisplay() {
 
     const modEdition = document.getElementById("edit-mod");
     const modModif = document.getElementById("btn-modif");
-    console.log("ma page a été rafraichie3");
     if (modEdition && tokenValidation && modModif) {
         modEdition.style.display = 'flex';
         modModif.style.display = 'flex';
@@ -34,8 +33,10 @@ async function adminModalDisplay() {
     const modalDisplay = document.getElementById("modal-admin");
 
     if (showModal && modalDisplay) {
-        showModal.addEventListener("click", function(event) {
+        showModal.addEventListener("click", async function(event) {
             event.preventDefault();
+            await fetchWorks(); // Ensure the works array is up-to-date
+            genPagesModal(works); // Ensure the modal gallery is updated when the modal is opened
             openModal();
         });
 
@@ -65,11 +66,11 @@ export function genAddPagesModal() {
     headerModal.appendChild(goBackModal);
     headerModal.appendChild(closeModal);
 
-    // Creating the form container
+    // Creation du form container
     const formContainer = document.createElement("div");
     formContainer.className = "form-container";
 
-    // Creating the image upload section
+    // Creation de la section image-upload
     const imageUpload = document.createElement("div");
     imageUpload.className = "image-upload";
 
@@ -92,12 +93,12 @@ export function genAddPagesModal() {
     fileInput.id = "file-input";
     fileInput.type = "file";
     fileInput.accept = ".jpg, .jpeg, .png";
-    fileInput.style.display = "none"; // Hide the actual file input
+    fileInput.style.display = "none";
 
     // Create image preview element
     const imagePreview = document.createElement("img");
     imagePreview.className = "image-preview";
-    imagePreview.style.display = "none"; // Initially hidden
+    imagePreview.style.display = "none";
 
     // Appending elements to imageUpload section
     uploadPlaceholder.appendChild(placeholderIcon);
