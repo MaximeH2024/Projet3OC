@@ -63,6 +63,8 @@ export function genPagesModal(works) {
     const modalDisplay = document.getElementById("modal-admin");
     const modalWrapper = document.querySelector(".modal-wrapper");
 
+    modalWrapper.innerHTML = "";
+
     let closeModal = modalWrapper.querySelector('.close-modal');
     let title = modalWrapper.querySelector('#title-modal');
     let addBtn = modalWrapper.querySelector('.add-picture-btn');
@@ -76,7 +78,8 @@ export function genPagesModal(works) {
         closeModal.appendChild(closeIcon);
         modalWrapper.appendChild(closeModal);
 
-        closeModal.addEventListener('click', function () {
+        closeModal.addEventListener('click', function (event) {
+            event.preventDefault();
             modalDisplay.style.display = 'none';
         });
 
@@ -141,11 +144,9 @@ export function toggleLoginLogout() {
 
     if (token) {
         loginBtn.innerText = 'logout';
-        loginBtn.href = '#';
         loginBtn.addEventListener('click', function(event) {
             event.preventDefault();
             localStorage.removeItem('Token');
-            location.reload(); // Reload the page to reflect the changes
         });
     } else {
         loginBtn.innerText = 'login';
@@ -194,16 +195,14 @@ function removeWorkFromModalGallery(id) {
 
 function deleteWorks() {
     const trashIcons = document.querySelectorAll('.gallery-modal figure i.fa-trash-can');
-    console.log(trashIcons);
 
     trashIcons.forEach(function (icon) {
         icon.addEventListener('click', async function (event) {
-            console.log('Icon clicked!', event.target);
             const figure = event.target.closest('figure');
             if (figure) {
                 const id = figure.dataset.id;
                 await deleteWork(id);
-                figure.remove();
+                // The figure will be removed by removeWorkFromModalGallery after successful deletion
             }
         });
     });

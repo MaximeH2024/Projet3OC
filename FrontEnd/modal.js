@@ -5,7 +5,7 @@ import { sendWork } from './works.js';
 import { openModal } from './modalState.js';
 
 
-editDisplay();
+
 
 let works;
 
@@ -15,14 +15,14 @@ async function fetchWorks() {
 }
 await fetchWorks();
 
-adminModalDisplay();
+
 
 function editDisplay() {
     const tokenValidation = window.localStorage.getItem("Token");
 
     const modEdition = document.getElementById("edit-mod");
     const modModif = document.getElementById("btn-modif");
-
+    console.log("ma page a été rafraichie3");
     if (modEdition && tokenValidation && modModif) {
         modEdition.style.display = 'flex';
         modModif.style.display = 'flex';
@@ -36,12 +36,12 @@ async function adminModalDisplay() {
     if (showModal && modalDisplay) {
         showModal.addEventListener("click", function(event) {
             event.preventDefault();
-            console.log("je clique pour génerer ma page");
             openModal();
         });
 
         window.addEventListener('click', function(event) {
             if (event.target === modalDisplay) {
+                event.preventDefault();
                 closeModal();
             }
         });
@@ -175,11 +175,13 @@ export function genAddPagesModal() {
     wrapperSelection.appendChild(submitArea);
     submitArea.appendChild(submitButton);
 
-    closeModal.addEventListener('click', function () {
+    closeModal.addEventListener('click', function (event) {
+        event.preventDefault();
         modalDisplay.style.display = 'none';
     });
 
-    goBackModal.addEventListener('click', function () {
+    goBackModal.addEventListener('click', function (event) {
+        event.preventDefault();
         wrapperSelection.innerHTML = "";
         genPagesModal(works);
     });
@@ -215,6 +217,7 @@ export function genAddPagesModal() {
 
     // Add event listener to submit button
     submitButton.addEventListener('click', async function (event) {
+        event.preventDefault();
         const title = titleInput.value.trim();
         const categoryId = parseInt(categorySelect.value); // Ensure categoryId is an integer
         const file = fileInput.files[0];
@@ -231,3 +234,5 @@ export function genAddPagesModal() {
     });
 }
 
+editDisplay();
+adminModalDisplay();
