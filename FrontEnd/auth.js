@@ -4,6 +4,19 @@ userInfo.addEventListener("submit", function(event){
     const email = document.getElementById("email").value.trim();
     const password = document.getElementById("pwd").value.trim();
 
+    // Regex pour valider l'email
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    
+    if (!emailRegex.test(email)) {
+        displayErrorMessage("Email invalide");
+        return;
+    }
+
+    if (password.length < 5) {
+        displayErrorMessage("Le mot de passe doit contenir au moins 5 caractères");
+        return;
+    }
+
     const logInInfo = {
         email: email,
         password: password,
@@ -39,11 +52,9 @@ function errorDisplay(userAnswer){
     let errorMessage = "";
     console.log(userAnswer.status);
     switch (userAnswer.status) {
-        case 401:    
-            errorMessage = "Erreur dans l’identifiant ou le mot de passe"
-        break;
+        case 401:
         case 404:
-          errorMessage = "Compte Inexistant";
+          errorMessage = "Erreur de connexion";
         break;
         default:
           errorMessage = "Erreur inconnue";
@@ -54,16 +65,4 @@ function errorDisplay(userAnswer){
     errorTxt.innerText = errorMessage;
     modalActivation.style.display = 'flex';
 
-    const closeModalBtn = document.querySelector(".close-modal i");
-    closeModalBtn.addEventListener('click', closeModal);
-    
-    window.addEventListener('click', function(event) {
-        if (event.target === modalActivation) {
-            closeModal();
-        }
-    });
-
-    function closeModal() {
-        modalActivation.style.display = 'none';
-    }
 }

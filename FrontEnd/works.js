@@ -1,10 +1,13 @@
+// Importation des fonctions depuis modal.js
 import { genAddPagesModal } from "./modal.js";
 
+// Récupération des catégories depuis l'API
 const reponsecategories = await fetch("http://localhost:5678/api/categories");
 const worksCat = await reponsecategories.json();
 
 export { worksCat };
 
+// Fonction pour filtrer les travaux par catégorie
 export function worksFilter(worksCat) {
     const navAll = {
         id: 0,
@@ -32,11 +35,14 @@ export function worksFilter(worksCat) {
     });
 }
 
+// Appeler la fonction worksFilter pour initialiser les filtres de catégorie
 worksFilter(worksCat);
 
+// Récupération des travaux depuis l'API
 const reponse = await fetch("http://localhost:5678/api/works");
 let works = await reponse.json();
 
+// Fonction pour créer et afficher les travaux sur la page
 export function pageCreation(works, categoryId) {
     const sectionGallery = document.querySelector(".gallery");
     sectionGallery.innerHTML = '';
@@ -59,6 +65,7 @@ export function pageCreation(works, categoryId) {
     });
 }
 
+// Fonction pour générer et afficher la modale de galerie
 export function genPagesModal(works) {
     const modalDisplay = document.getElementById("modal-admin");
     const modalWrapper = document.querySelector(".modal-wrapper");
@@ -129,15 +136,17 @@ export function genPagesModal(works) {
     deleteWorks();
 }
 
+// Fonction pour fermer la modale
 export function closeModal() {
     const modalDisplay = document.getElementById("modal-admin");
 
     if (modalDisplay) {
-        console.log("je ferme ma modale")
+        console.log("je ferme ma modale");
         modalDisplay.style.display = 'none';
     }
 }
 
+// Fonction pour basculer entre le login et le logout
 export function toggleLoginLogout() {
     const loginBtn = document.getElementById('login-btn');
     const token = localStorage.getItem('Token');
@@ -147,7 +156,7 @@ export function toggleLoginLogout() {
         loginBtn.addEventListener('click', function(event) {
             event.preventDefault();
             localStorage.removeItem('Token');
-            window.location.href = 'index.html'; // Redirect to index.html
+            window.location.href = 'index.html'; // Rediriger vers index.html
         });
     } else {
         loginBtn.innerText = 'login';
@@ -155,6 +164,7 @@ export function toggleLoginLogout() {
     }
 }
 
+// Fonction pour supprimer un travail par ID
 async function deleteWork(id) {
     const token = localStorage.getItem('Token');
     if (!token) {
@@ -176,16 +186,17 @@ async function deleteWork(id) {
         removeWorkFromGallery(id);
         removeWorkFromModalGallery(id);
         
-        // Update the modal gallery
+        // Mettre à jour la galerie modale
         genPagesModal(works);
 
-        // Close the modal
+        // Fermer la modale
         closeModal();
     } else {
         console.error(`Failed to delete work with ID ${id}`);
     }
 }
 
+// Fonction pour supprimer un travail de la galerie principale
 function removeWorkFromGallery(id) {
     const figureElement = document.querySelector(`.gallery figure[data-id='${id}']`);
     if (figureElement) {
@@ -193,6 +204,7 @@ function removeWorkFromGallery(id) {
     }
 }
 
+// Fonction pour supprimer un travail de la galerie modale
 function removeWorkFromModalGallery(id) {
     const figureElement = document.querySelector(`.gallery-modal figure[data-id='${id}']`);
     if (figureElement) {
@@ -200,6 +212,7 @@ function removeWorkFromModalGallery(id) {
     }
 }
 
+// Fonction pour ajouter des écouteurs d'événements aux icônes de poubelle dans la galerie modale
 function deleteWorks() {
     const trashIcons = document.querySelectorAll('.gallery-modal figure i.fa-trash-can');
 
@@ -209,11 +222,12 @@ function deleteWorks() {
             if (figure) {
                 const id = figure.dataset.id;
                 await deleteWork(id);
-                }
+            }
         });
     });
 }
 
+// Fonction pour envoyer un nouveau travail à l'API
 export async function sendWork(title, categoryId, file) {
     const formData = new FormData();
     formData.append('title', title);
@@ -235,14 +249,14 @@ export async function sendWork(title, categoryId, file) {
             const newWork = await response.json();
             console.log('New work added:', newWork);
 
-            // Update the works array and the page
+            // Mettre à jour le tableau works et la page
             works.push(newWork);
             pageCreation(works, 0);
 
-            // Update the modal gallery
+            // Mettre à jour la galerie modale
             genPagesModal(works);
             
-            // Close the modal
+            // Fermer la modale
             closeModal();
         } else {
             const errorData = await response.json();
@@ -253,6 +267,7 @@ export async function sendWork(title, categoryId, file) {
     }
 }
 
+// Initialiser la page et la galerie modale avec les travaux existants
 pageCreation(works, 0);
 genPagesModal(works);
 toggleLoginLogout();

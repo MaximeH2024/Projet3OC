@@ -1,22 +1,20 @@
+// Importation des fonctions depuis works.js et modalState.js
 import { genPagesModal } from './works.js';
 import { closeModal } from './works.js';
 import { worksCat } from './works.js';
 import { sendWork } from './works.js';
 import { openModal } from './modalState.js';
 
-
-
-
 let works;
 
+// Fonction pour récupérer les travaux depuis l'API
 async function fetchWorks() {
     const response = await fetch("http://localhost:5678/api/works");
     works = await response.json();
 }
 await fetchWorks();
 
-
-
+// Fonction pour afficher les options d'édition si le token est valide
 function editDisplay() {
     const tokenValidation = window.localStorage.getItem("Token");
 
@@ -28,6 +26,7 @@ function editDisplay() {
     }
 }
 
+// Fonction pour afficher la modale d'administration
 async function adminModalDisplay() {
     const showModal = document.querySelector("#btn-modif");
     const modalDisplay = document.getElementById("modal-admin");
@@ -35,8 +34,8 @@ async function adminModalDisplay() {
     if (showModal && modalDisplay) {
         showModal.addEventListener("click", async function(event) {
             event.preventDefault();
-            await fetchWorks(); // Ensure the works array is up-to-date
-            genPagesModal(works); // Ensure the modal gallery is updated when the modal is opened
+            await fetchWorks(); // S'assurer que le tableau works est à jour
+            genPagesModal(works); // Mettre à jour la galerie modale lors de l'ouverture de la modale
             openModal();
         });
 
@@ -49,6 +48,7 @@ async function adminModalDisplay() {
     }
 }
 
+// Fonction pour générer la modale d'ajout de travaux
 export function genAddPagesModal() {
     const modalDisplay = document.getElementById("modal-admin");
     const wrapperSelection = document.querySelector(".modal-wrapper");
@@ -66,11 +66,11 @@ export function genAddPagesModal() {
     headerModal.appendChild(goBackModal);
     headerModal.appendChild(closeModal);
 
-    // Creation du form container
+    // Création du conteneur de formulaire
     const formContainer = document.createElement("div");
     formContainer.className = "form-container";
 
-    // Creation de la section image-upload
+    // Création de la section image-upload
     const imageUpload = document.createElement("div");
     imageUpload.className = "image-upload";
 
@@ -95,22 +95,22 @@ export function genAddPagesModal() {
     fileInput.accept = ".jpg, .jpeg, .png";
     fileInput.style.display = "none";
 
-    // Create image preview element
+    // Créer l'élément de prévisualisation de l'image
     const imagePreview = document.createElement("img");
     imagePreview.className = "image-preview";
     imagePreview.style.display = "none";
 
-    // Appending elements to imageUpload section
+    // Ajouter des éléments à la section imageUpload
     uploadPlaceholder.appendChild(placeholderIcon);
     uploadPlaceholder.appendChild(addPhotoText);
     uploadPlaceholder.appendChild(fileSizeText);
-    uploadPlaceholder.appendChild(imagePreview); // Add preview image to the upload section
+    uploadPlaceholder.appendChild(imagePreview); // Ajouter l'image de prévisualisation à la section de téléchargement
 
     fileInputLabel.appendChild(uploadPlaceholder);
     imageUpload.appendChild(fileInputLabel);
     imageUpload.appendChild(fileInput);
 
-    // Creating the title field
+    // Création du champ de titre
     const titleField = document.createElement("div");
     titleField.className = "form-field";
 
@@ -122,11 +122,11 @@ export function genAddPagesModal() {
     titleInput.id = "title";
     titleInput.type = "text";
 
-    // Appending elements to title field
+    // Ajouter des éléments au champ de titre
     titleField.appendChild(titleLabel);
     titleField.appendChild(titleInput);
 
-    // Creating the category field
+    // Création du champ de catégorie
     const categoryField = document.createElement("div");
     categoryField.className = "form-field";
 
@@ -142,52 +142,54 @@ export function genAddPagesModal() {
     defaultOption.innerText = "Sélectionner une catégorie";
     categorySelect.appendChild(defaultOption);
 
-    // Populate the category select with options from worksCat
+    // Remplir le select de catégorie avec les options de worksCat
     worksCat.forEach(category => {
         const option = document.createElement("option");
         option.value = category.id;
         option.innerText = category.name;
         categorySelect.appendChild(option);
-        console.log(`Option added: value=${option.value}, text=${option.innerText}`);
+        console.log(`Option ajoutée : valeur=${option.value}, texte=${option.innerText}`);
     });
 
-    // Appending elements to category field
+    // Ajouter des éléments au champ de catégorie
     categoryField.appendChild(categoryLabel);
     categoryField.appendChild(categorySelect);
 
-    // Appending all sections to form container
+    // Ajouter toutes les sections au conteneur de formulaire
     formContainer.appendChild(imageUpload);
     formContainer.appendChild(titleField);
     formContainer.appendChild(categoryField);
 
-    // Creating the submit area
+    // Création de la zone de soumission
     const submitArea = document.createElement("div");
     submitArea.className = "submit-area";
 
-    // Creating the submit button
+    // Création du bouton de soumission
     const submitButton = document.createElement("p");
     submitButton.className = "submit-button";
     submitButton.innerText = "Valider";
 
-    // Appending elements to wrapper
+    // Ajouter des éléments au wrapper
     wrapperSelection.appendChild(headerModal);
     wrapperSelection.appendChild(titleModal);
     wrapperSelection.appendChild(formContainer);
     wrapperSelection.appendChild(submitArea);
     submitArea.appendChild(submitButton);
 
+    // Ajouter un écouteur d'événement pour fermer la modale
     closeModal.addEventListener('click', function (event) {
         event.preventDefault();
         modalDisplay.style.display = 'none';
     });
 
+    // Ajouter un écouteur d'événement pour revenir en arrière
     goBackModal.addEventListener('click', function (event) {
         event.preventDefault();
         wrapperSelection.innerHTML = "";
         genPagesModal(works);
     });
 
-    // Function to check form validity
+    // Fonction pour vérifier la validité du formulaire
     function checkFormValidity() {
         const title = titleInput.value.trim();
         const categoryId = categorySelect.value;
@@ -200,40 +202,63 @@ export function genAddPagesModal() {
         }
     }
 
-    // Add event listeners to inputs
+    // Ajouter des écouteurs d'événements aux entrées
     titleInput.addEventListener('input', checkFormValidity);
     categorySelect.addEventListener('change', checkFormValidity);
     fileInput.addEventListener('change', function (event) {
-        checkFormValidity();
         const file = event.target.files[0];
-        if (file) {
+        if (file && validateFile(file)) {
+            checkFormValidity();
             const reader = new FileReader();
             reader.onload = function (e) {
                 imagePreview.src = e.target.result;
                 uploadPlaceholder.classList.add('uploaded');
+                imagePreview.style.display = "block";
             }
             reader.readAsDataURL(file);
+        } else {
+            fileInput.value = ''; // Réinitialiser l'input file si le fichier n'est pas valide
+            checkFormValidity();
         }
     });
 
-    // Add event listener to submit button
+    // Ajouter un écouteur d'événement au bouton de soumission
     submitButton.addEventListener('click', async function (event) {
         event.preventDefault();
         const title = titleInput.value.trim();
-        const categoryId = parseInt(categorySelect.value); // Ensure categoryId is an integer
+        const categoryId = parseInt(categorySelect.value); // S'assurer que categoryId est un entier
         const file = fileInput.files[0];
 
-        console.log(`Title: ${title}`);
-        console.log(`Category ID: ${categoryId}`);
-        console.log(`File: ${file}`);
+        console.log(`Titre : ${title}`);
+        console.log(`ID de catégorie : ${categoryId}`);
+        console.log(`Fichier : ${file}`);
 
         if (title && categoryId && file) {
             await sendWork(title, categoryId, file);
         } else {
-            alert('Please fill all fields');
+            alert('Veuillez remplir tous les champs');
         }
     });
 }
 
+// Fonction pour valider le fichier image
+function validateFile(file) {
+    const validTypes = ['image/jpeg', 'image/png'];
+    const maxSize = 4 * 1024 * 1024; // 4 Mo en octets
+
+    if (!validTypes.includes(file.type)) {
+        alert('Seuls les fichiers JPG et PNG sont autorisés.');
+        return false;
+    }
+
+    if (file.size > maxSize) {
+        alert('La taille du fichier ne doit pas dépasser 4 Mo.');
+        return false;
+    }
+
+    return true;
+}
+
+// Exécution des fonctions d'affichage initiales
 editDisplay();
 adminModalDisplay();

@@ -17,3 +17,4 @@ export async function openModal() {
 
     modalDisplay.style.display = 'flex';
 }
+
