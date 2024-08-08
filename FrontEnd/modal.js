@@ -160,11 +160,11 @@ export function genAddPagesModal() {
     formContainer.appendChild(titleField);
     formContainer.appendChild(categoryField);
 
-    // Création de la zone de soumission
+    // Création de la zone d'envoi
     const submitArea = document.createElement("div");
     submitArea.className = "submit-area";
 
-    // Création du bouton de soumission
+    // Création du bouton d'envoi
     const submitButton = document.createElement("p");
     submitButton.className = "submit-button";
     submitButton.innerText = "Valider";
@@ -202,7 +202,7 @@ export function genAddPagesModal() {
         }
     }
 
-    // Ajouter des écouteurs d'événements aux entrées
+    // Ajouter des écouteurs d'événements aux input
     titleInput.addEventListener('input', checkFormValidity);
     categorySelect.addEventListener('change', checkFormValidity);
     fileInput.addEventListener('change', function (event) {

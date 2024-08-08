@@ -19,10 +19,8 @@ export function worksFilter(worksCat) {
         filterSet.add(category);
     });
 
-    const menuFilter = Array.from(filterSet);
-
     const sectionFilter = document.querySelector(".categories");
-    menuFilter.forEach(category => {
+    filterSet.forEach(category => {
         const filterElement = document.createElement("div");
         filterElement.className = "filter";
         filterElement.innerText = category.name;
