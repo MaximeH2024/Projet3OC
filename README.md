@@ -1,4 +1,4 @@
-![Sophie Bluel](./assets/images/sophie-bluel.png)
+![Sophie Bluel](./frontend/assets/images/sophie-bluel.png)
 
 # Projet 3 : 
 Créez une page web dynamique avec JavaScript
