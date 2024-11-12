@@ -1,8 +1,23 @@
-# Portfolio-architecte-sophie-bluel
+![Sophie Bluel](./assets/images/sophie-bluel.png)
 
-Code du projet 6 d'intégrateur web.
+# Projet 3 : 
+Créez une page web dynamique avec JavaScript
 
-## Information pour le lancer le code
+## Description
+Ce projet vous engage à créer une page web dynamique pour le site d'une architecte d'intérieur, Sophie Bluel, en utilisant JavaScript et en interagissant avec une API. Le projet inclut la gestion des événements utilisateurs, la manipulation du DOM, et la création d'une modale d'upload de médias.
 
- - Lancer le backend depuis votre terminal en suivant les instruction du fichier ReadMe.
- - Si vous désirez afficher le code du backend et du frontend, faites le dans 2 instances de VSCode différentes pour éviter tout problème
+## Objectifs
+- Développer une interface dynamique en JavaScript.
+- Communiquer avec une API pour gérer les données.
+- Implémenter une interface d'administration avec une page de connexion.
+
+## Compétences acquises
+- Manipulation du DOM en JavaScript.
+- Gestion des interactions utilisateur.
+- Utilisation des APIs pour rendre les pages web interactives.
+
+## Technologies et Outils
+- **JavaScript**
+- **API REST**
+- **Visual Studio Code** pour le développement
+- **Figma** pour les maquettes
