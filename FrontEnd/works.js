@@ -2,7 +2,7 @@
 import { genAddPagesModal } from "./modal.js";
 
 // Récupération des catégories depuis l'API
-const reponsecategories = await fetch("http://localhost:5678/api/categories");
+const reponsecategories = await fetch("https://projet3oc.onrender.com/api/categories");
 const worksCat = await reponsecategories.json();
 
 export { worksCat };
@@ -37,7 +37,7 @@ export function worksFilter(worksCat) {
 worksFilter(worksCat);
 
 // Récupération des travaux depuis l'API
-const reponse = await fetch("http://localhost:5678/api/works");
+const reponse = await fetch("https://projet3oc.onrender.com/api/works");
 let works = await reponse.json();
 
 // Fonction pour créer et afficher les travaux sur la page
@@ -170,7 +170,7 @@ async function deleteWork(id) {
         return;
     }
 
-    const response = await fetch(`http://localhost:5678/api/works/${id}`, {
+    const response = await fetch(`https://projet3oc.onrender.com/works/${id}`, {
         method: 'DELETE',
         headers: {
             'Content-Type': 'application/json',
@@ -234,7 +234,7 @@ export async function sendWork(title, categoryId, file) {
     
     const token = localStorage.getItem('Token');
     try {
-        const response = await fetch('http://localhost:5678/api/works', {
+        const response = await fetch('https://projet3oc.onrender.com/api/works', {
             method: 'POST',
             headers: {
                 accept: "application/json",

@@ -3,7 +3,7 @@ import { genPagesModal } from './works.js';
 let works = [];
 
 async function fetchWorks() {
-    const response = await fetch("http://localhost:5678/api/works");
+    const response = await fetch("https://projet3oc.onrender.com/api/works");
     works = await response.json();
 }
 

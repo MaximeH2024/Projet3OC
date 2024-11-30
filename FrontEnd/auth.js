@@ -26,7 +26,7 @@ userInfo.addEventListener("submit", function(event){
 
 async function logInCheck(logInInfo) {
     try {
-        const userAnswer = await fetch("http://localhost:5678/api/users/login", {
+        const userAnswer = await fetch("https://projet3oc.onrender.com//api/users/login", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
